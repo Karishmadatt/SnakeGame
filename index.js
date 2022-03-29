@@ -25,6 +25,24 @@ snake_cord_y = [0] ;
 food_x = 0 ;
 food_y = 0 ;
 
+
+function updatefood(X , Y){
+
+    // update food -> remove old cordinate 
+
+    ctx.fillStyle = color_grass;
+    ctx.fillRect( food_x , food_y , boxLen, boxLen );
+
+    // get new cordinate 
+    NewFoodCord()
+    // make new cordinate as food 
+
+    ctx.fillStyle = color_food ;
+    ctx.fillRect( food_x , food_y , boxLen, boxLen );
+
+}
+
+
 class SnakeGame{
     
     BoardSize = 0 ;
@@ -38,6 +56,8 @@ class SnakeGame{
         myCanvas.height = heightshouldbe ;
         ctx.fillStyle = color_grass;
         ctx.fillRect( 0 , 0, widthshouldbe, heightshouldbe );
+
+        updatefood() ;
 
     }
 
@@ -54,19 +74,9 @@ function check(X , Y){
     }
 }
 
-function checkeat(X , Y){
-    return X==food_x && Y==food_y ;
-}
-
-function updatefood(X , Y){
-    if(food_x==X && food_y==Y){
-        // update food
-        // get new cordinate 
-        // make 
-
-    }
-
-}
+// function checkeat(X , Y){
+//     return X==food_x && Y==food_y ;
+// }
 
 function move(){
 
@@ -88,22 +98,27 @@ function move(){
     ctx.fillRect( newX, newY, boxLen, boxLen );
     x+=boxLen
 
-    if( checkeat(newX , newY) ){
-        
-    }
-
+    
     // del corr from back 
     // get last cord and set it to prev 
-
+    
     let oldX = snake_cord_x[snake_cord_x.length -1 ] ;
     let oldY = snake_cord_y[snake_cord_y.length -1 ] ;
-    console.log(oldX , oldY, length)
-
+    console.log(oldX , oldY, length , food_x , food_y)
+    
     ctx.fillStyle = color_grass ;
     ctx.fillRect( oldX, oldY, boxLen, boxLen );
+    
+    if(newX==food_x && newY==food_y){
+        
+        updatefood();
+    }
+    else{
+        snake_cord_x.pop() ;
+        snake_cord_y.pop() ;
 
-    snake_cord_x.pop() ;
-    snake_cord_y.pop() ;
+    }
+
 
 
     }
@@ -111,7 +126,7 @@ function move(){
 }
 
 // ctx.fillRect( 0 , 0 , boxLen*boxes , boxLen*boxes );
-setInterval(move , 200)
+setInterval(move , 100 )
 
 
 document.addEventListener( 'keydown' , data => {
@@ -146,7 +161,7 @@ document.addEventListener( 'keydown' , data => {
 } )
 
 function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
+    return Math.floor(Math.random() * (max - min + 1) + min) *boxLen
   }
 
 function NewFoodCord(){
