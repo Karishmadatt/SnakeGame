@@ -1,7 +1,9 @@
 var myCanvas = document.getElementById("mycanvas");
 var ctx = myCanvas.getContext("2d");
-let color_snake = "#FF0000" ;
+
+let color_snake = "#0072BB" ;
 let color_grass = "#79D021" ;
+let color_food = "#FF0000" ;
 
 var winheight = window.innerHeight
 var winwidth = window.innerWidth
@@ -14,10 +16,14 @@ var moveY = 0 ;
 
 let boxLen = 20 ;
 let paused = false ;
+let stop = false ;
 
 
-snake_cord_x = [230] ;
-snake_cord_y = [230] ;
+snake_cord_x = [0] ;
+snake_cord_y = [0] ;
+
+food_x = 0 ;
+food_y = 0 ;
 
 class SnakeGame{
     
@@ -42,8 +48,27 @@ let game = new SnakeGame(boxes) ;
 
 let x = 0
 
+function check(X , Y){
+    if( X >= boxLen*boxes || X < 0 || Y >= boxLen*boxes || Y < 0){
+        stop = true 
+    }
+}
+
+function checkeat(X , Y){
+    return X==food_x && Y==food_y ;
+}
+
+function updatefood(X , Y){
+    if(food_x==X && food_y==Y){
+        // update food
+        // get new cordinate 
+        // make 
+
+    }
+
+}
+
 function move(){
-    if(!paused){
 
     // array.pop() is used for del from last 
     // array.unshift("data") is used to add "data" from front 
@@ -52,12 +77,20 @@ function move(){
     let newX = snake_cord_x[0] + boxLen*moveX;
     let newY = snake_cord_y[0] +  boxLen*moveY;
 
+    check(newX , newY) ;
+    
+    if(!paused && !stop){
+
     snake_cord_x.unshift(newX) ;
     snake_cord_y.unshift(newY) ;
 
     ctx.fillStyle = color_snake ;
     ctx.fillRect( newX, newY, boxLen, boxLen );
     x+=boxLen
+
+    if( checkeat(newX , newY) ){
+        
+    }
 
     // del corr from back 
     // get last cord and set it to prev 
@@ -78,7 +111,8 @@ function move(){
 }
 
 // ctx.fillRect( 0 , 0 , boxLen*boxes , boxLen*boxes );
-setInterval(move , 500)
+setInterval(move , 200)
+
 
 document.addEventListener( 'keydown' , data => {
     
@@ -110,3 +144,14 @@ document.addEventListener( 'keydown' , data => {
     // console.log(data.key)
 
 } )
+
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+function NewFoodCord(){
+
+    food_x = randomIntFromInterval(0 , 44) ;
+    food_y = randomIntFromInterval(0 , 44) ;
+
+}
