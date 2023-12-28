@@ -8,10 +8,33 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id ="test">
-        <canvas id="mycanvas"  width="10" height="10"></canvas>
+    <div id ="Main">
+        
+        <div >
+            <canvas id="mycanvas"  width="10" height="10"></canvas>
+        </div>
+
+        <div id="ScoreSection">
+            <section id="score">
+               <span>score
+                <span id="scr">00</span>
+               </span>
+            </section>
+            
+
+            <label for="level">Select level:</label>
+            <select name="levels" id="levels">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            
+            <section >
+                <button onclick="StartReset()" id="startReset">Start</button>
+            </section>
+        </div>
+
     </div>
-    
 </body>
 
 <script src="index.js"></script>

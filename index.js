@@ -1,5 +1,26 @@
 var myCanvas = document.getElementById("mycanvas");
 var ctx = myCanvas.getContext("2d");
+let scorevalue = document.getElementById('scr');
+let levelDropdown = document.getElementById('levels');
+let startReset = document.getElementById("startReset");
+
+let currentScore = 0;
+
+
+
+let level = {
+    "easy" : 99999999 ,
+    "medium" :999999,
+    "hard" : 9999,
+};
+
+
+console.log(level[levelDropdown.value])
+
+let intervalSpeed = 100 ;
+
+// let speedinc = 0.00000000000000000000000001 ;
+// console.log(score);
 
 let color_snake = "#0072BB" ;
 let color_grass = "#79D021" ;
@@ -30,8 +51,8 @@ function updatefood(X , Y){
 
     // update food -> remove old cordinate 
 
-    ctx.fillStyle = color_grass;
-    ctx.fillRect( food_x , food_y , boxLen, boxLen );
+    // ctx.fillStyle = color_grass;
+    // ctx.fillRect( food_x , food_y , boxLen, boxLen );
 
     // get new cordinate 
     NewFoodCord()
@@ -74,9 +95,9 @@ function check(X , Y){
     }
 }
 
-// function checkeat(X , Y){
-//     return X==food_x && Y==food_y ;
-// }
+function checkeat(X , Y){
+    return X==food_x && Y==food_y ;
+}
 
 function move(){
 
@@ -99,7 +120,7 @@ function move(){
     x+=boxLen
 
     
-    // del corr from back 
+    // del cord from back 
     // get last cord and set it to prev 
     
     let oldX = snake_cord_x[snake_cord_x.length -1 ] ;
@@ -110,8 +131,17 @@ function move(){
     ctx.fillRect( oldX, oldY, boxLen, boxLen );
     
     if(newX==food_x && newY==food_y){
-        
+        scorevalue.innerText = ++currentScore ;
         updatefood();
+
+        // intervalSpeed -= 0.00000000000001 ;
+        // intervalSpeed += 0.00000000000099;
+        // setInterval(move,intervalSpeed)
+        setInterval(move , level[levelDropdown.value] );
+
+    }
+    else if(checkSelfBite()){
+        stop=true;
     }
     else{
         snake_cord_x.pop() ;
@@ -121,12 +151,26 @@ function move(){
 
 
 
+
     }
+    setInterval(move , 99999 );
+
     // console.log(x/boxLen)
 }
 
-// ctx.fillRect( 0 , 0 , boxLen*boxes , boxLen*boxes );
-setInterval(move , 100 )
+
+function checkSelfBite(){
+   let n=snake_cord_x.length;let count=1;let flag=0;
+   while(count!=n){
+        if(snake_cord_x[0]===snake_cord_x[count] && snake_cord_y[0]===snake_cord_y[count]){
+             flag=1;
+             return flag;
+        }
+        count++;
+   }
+   return flag;
+
+}
 
 
 document.addEventListener( 'keydown' , data => {
@@ -152,8 +196,9 @@ document.addEventListener( 'keydown' , data => {
         console.log("move down") ;
     }
     else if(data.key == "Escape" ){
-        paused = !paused ;  
-        console.log("Escape pressed" , paused)
+        StartReset();
+        // paused = !paused ;  
+        // console.log("Escape pressed" , paused)
     }
 
     // console.log(data.key)
@@ -168,5 +213,33 @@ function NewFoodCord(){
 
     food_x = randomIntFromInterval(0 , 44) ;
     food_y = randomIntFromInterval(0 , 44) ;
+
+}
+
+let isFirstTimeRan = true;
+function StartReset() {
+    
+    if(startReset.innerText == "Start"){
+        if(isFirstTimeRan){
+            setInterval(move , intervalSpeed );    
+            isFirstTimeRan = false;
+            startReset.innerText = "Pause"     
+        }
+        else if(paused){
+            paused = !paused ;  
+            startReset.innerText = "Pause"
+        }
+        else{
+            startReset.innerText = "Pause"     
+        }
+    }
+    else if(paused== false){
+        paused = !paused ;  
+        startReset.innerText = "Start"
+    }
+    else{
+        paused = !paused ;  
+        startReset.innerText = "Start"
+    }
 
 }
